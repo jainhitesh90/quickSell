@@ -14,14 +14,13 @@ code {
 
 .container {
   max-width: 100% !important;
-  padding: 0 !important;
+  padding: 16px !important;
 }
 
 .title {
   color: white;
   font-size: 36px;
   text-align: center;
-  padding-top: 48px;
 }
 
 .small-spinner {
@@ -31,3 +30,131 @@ code {
   display: flex !important;
   margin: auto !important;
 }
+
+.product-list-table {
+  background-color: lightgray;
+  padding: 16px;
+}
+
+.product-item {
+  padding: 6px 0;
+}
+
+.product-item :hover {
+  background-color: white;
+}
+
+.product-item-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 0;
+}
+
+.product-item-action {
+  font-size: 16px;
+  font-weight: 400;
+  margin-bottom: 0;
+  cursor: pointer;
+  color: #664986;
+}
+
+.product-item-info {
+  font-size: 16px;
+  font-weight: 400;
+  margin-bottom: 0;
+  color: grey;
+}
+
+.product-list-header-section {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  align-items: center;
+}
+
+.add-product-question {
+    margin-left: 8px;
+    font-size: 16px;
+    color: #664986;
+    cursor: pointer;
+}
+
+.error-mssage {
+  color: red;
+  margin: 0 auto;
+  font-size: 14px;
+}
+
+
+.primary-text-color {
+  color: #664986;
+}
+
+.login-signup-header-label {
+  color: #664986;
+  font-size: 24px;
+  margin: 4px auto;
+}
+
+.input-label {
+  color: #62748e;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.input-icon {
+  color: #664986 !important;
+  width: 16px !important
+}
+
+textarea:hover, 
+/* input:hover,  */
+input:active, 
+input:focus,
+select:active, 
+select:focus, 
+textarea:active, 
+textarea:focus, 
+button:focus,
+button:active,
+button:hover,
+label:focus,
+.btn:active,
+.btn.active
+{
+    outline:0 !important;
+    border-color: #664986 !important;
+    -webkit-appearance:none;
+    box-shadow: none !important;
+}
+
+.button-primary {
+  color: #fff;
+    background-color: #60467e !important;
+    border: 0 !important;
+    padding: 12px 24px !important;
+    background-image: -webkit-linear-gradient(left bottom,rgba(159,88,150,0) 0,rgba(159,88,150,0.6) 100%) !important;
+}
+
+.button-secondary {
+    color: #fff;
+    border: 0 !important;
+    padding: 12px 24px !important;
+}
+
+.button-secondary {
+  color: #fff;
+    border: 0 !important;
+    padding: 12px 24px !important;
+    background-color: gray;
+}
+
+.divider {
+  height: 0.5px;
+  color: gray;
+}
+
+.label {
+  color: #4a5568;
+}
+

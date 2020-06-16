@@ -1,5 +1,13 @@
 var Product = require('../models/product')
 
+exports.saveProduct = async function (product) {
+    try {
+        return await product.save();
+    } catch (e) {
+        throw Error('Error while saving product.')
+    }
+}
+
 exports.getAllProducts = async function () {
     try {
         return await Product.find({})
@@ -21,14 +29,6 @@ exports.getProduct = async function (query) {
         return await Product.findOne(query)
     } catch (e) {
         throw Error('Error while retrieving product.')
-    }
-}
-
-exports.saveProduct = async function (product) {
-    try {
-        return await product.save();
-    } catch (e) {
-        throw Error('Error while saving product.')
     }
 }
 
