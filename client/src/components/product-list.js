@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Label } from 'reactstrap';
 import { isNil, isEmpty } from 'lodash';
 import SpinnerComponent from '../custom-components/custom-spinner';
 import ApiHelper from '../utilities/api-helper';
@@ -74,6 +73,7 @@ export default class ProductList extends Component {
         if (!isNil(res.data.products)) {
             this.setState({
                 products: res.data.products,
+                total: res.data.total,
                 error: null,
                 showSpinner: false,
                 message: res.data.message
@@ -81,6 +81,7 @@ export default class ProductList extends Component {
         } else {
             this.setState({
                 products: [],
+                total: 0,
                 message: res.data.error,
                 showSpinner: false
             })
@@ -88,13 +89,14 @@ export default class ProductList extends Component {
     }
 
     renderPagination() {
+        const {limit, activePage, total} = this.state;
         return (
             <div className={'pagination-container'}>
                 <Pagination
-                    activePage={this.state.activePage}
-                    itemsCountPerPage={5}
-                    totalItemsCount={20}
-                    pageRangeDisplayed={5}
+                    activePage={activePage}
+                    itemsCountPerPage={limit}
+                    totalItemsCount={total}
+                    pageRangeDisplayed={limit}
                     onChange={this.handlePageChange.bind(this)}
                     itemClass="page-item"
                     linkClass="page-link"

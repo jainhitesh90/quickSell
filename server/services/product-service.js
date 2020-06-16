@@ -10,7 +10,9 @@ exports.saveProduct = async function (product) {
 
 exports.getAllProducts = async function (limit, skip) {
     try {
-        return await Product.find({}).limit(limit).skip(skip)
+        let total = await Product.find({}).count() 
+        let products = await Product.find({}).limit(limit).skip(skip); 
+        return { products, total} 
     } catch (e) {
         throw Error('Error while retrieving product list.')
     }

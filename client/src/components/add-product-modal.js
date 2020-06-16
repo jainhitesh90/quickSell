@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { isNil, isEmpty } from 'lodash';
+import { isNil } from 'lodash';
 import { Row, Col } from 'reactstrap';
 import CustomModal from '../custom-components/custom-modal';
 import CustomInput from '../custom-components/custom-input';
@@ -22,7 +22,6 @@ export default class AddProductModal extends Component {
     }
 
     render() {
-        console.log('props', this.props);
         const { product, showModal, onCancel } = this.props;
         return <CustomModal
             title={isNil(product) ? 'Add New Product' : 'Edit Product'}
@@ -97,7 +96,7 @@ export default class AddProductModal extends Component {
     validateInputs() {
         let errorObject = {};
         errorObject.nameError = Utility.validateInputFields('name', this.nameRef.current['reference'].current.value);
-        errorObject.descriptionError = Utility.validateInputFields('description', this.descriptionRef.current['reference'].current.value);
+        errorObject.descriptionError = Utility.validateDataLength('description', this.descriptionRef.current['reference'].current.value);
         errorObject.priceError = Utility.validateInputFields('price', this.priceRef.current['reference'].current.value);
         return errorObject;
     }

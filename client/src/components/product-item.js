@@ -8,7 +8,6 @@ export default class ProductItem extends Component {
     constructor(props) {
         super(props)
         this.state = {
-
         }
         this.onAddProducSuccessfully = this.onAddProducSuccessfully.bind(this);
         this.onDeleteProductSuccessfully = this.onDeleteProductSuccessfully.bind(this);
