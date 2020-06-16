@@ -21,9 +21,10 @@ exports.getProduct = async function (req, res) {
 }
 
 exports.getAllProducts = async function (req, res) {
-    console.log('retrieving products......')
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = parseInt(req.query.skip) || 0
     try {
-        var product = await ProductService.getAllProducts()
+        var product = await ProductService.getAllProducts(limit, skip)
         return res.status(200).json({ status: 200, products: product, message: "Product list succesfully retrieved" });
     } catch (e) {
         return res.status(400).json({ status: 400, errorMessage: e.message });

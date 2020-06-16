@@ -37,11 +37,12 @@ code {
 }
 
 .product-item {
-  padding: 6px 0;
+  padding: 8px;
 }
 
-.product-item :hover {
-  background-color: white;
+.product-image {
+  width: 100px;
+  height: 100px;
 }
 
 .product-item-title {
@@ -158,3 +159,13 @@ label:focus,
   color: #4a5568;
 }
 
+.pagination-container {
+  padding: 48px;
+  width: 50%;
+  margin: 0 auto;
+}
+
+.pagination-container ul{
+  width: 50%;
+  margin: 0 auto;
+}

@@ -1,24 +1,22 @@
 import React, { Component } from 'react';
-import { Row, Col, Label } from 'reactstrap';
+import { Label } from 'reactstrap';
 import { isNil, isEmpty } from 'lodash';
-import AddProductModal from './add-product-modal';
-import DeleteProductModal from './delete-product-modal';
 import SpinnerComponent from '../custom-components/custom-spinner';
 import ApiHelper from '../utilities/api-helper';
 import CustomError from '../custom-components/custom-error';
+import ProductItem from '../components/product-item';
+import Pagination from "react-js-pagination";
 
 export default class ProductList extends Component {
     constructor(props) {
         super(props)
         this.state = {
             products: [],
-            showSpinner: true
+            showSpinner: true,
+            limit: 5,
+            activePage: 1
         }
         this.getProductList = this.getProductList.bind(this);
-        this.onAddProducSuccessfully = this.onAddProducSuccessfully.bind(this);
-        this.onCancelAddProduct = this.onCancelAddProduct.bind(this);
-        this.onDeleteProductSuccessfully = this.onDeleteProductSuccessfully.bind(this);
-        this.onCancelDeleteProduct = this.onCancelDeleteProduct.bind(this);
     }
 
     componentWillMount() {
@@ -32,105 +30,34 @@ export default class ProductList extends Component {
     render() {
         return (
             <div>
-                {this.renderEditProductModal()}
-                {this.renderDeleteProductModal()}
                 <div className='product-list-container'>
                     <CustomError errorMessage={this.state.error} />
                     {this.renderProductList()}
                 </div>
+                {this.renderPagination()}
             </div>
         )
     }
 
-    renderEditProductModal() {
-        if (this.state.showEditProductModal) {
-            return <AddProductModal
-                product={this.state.selectedProduct}
-                showModal={this.state.showEditProductModal}
-                onCancel={this.onCancelAddProduct}
-                onSuccess={this.onAddProducSuccessfully}
-            />
-        }
-    }
-
-    renderDeleteProductModal() {
-        if (this.state.showDeleteProductModal) {
-            return <DeleteProductModal
-                product={this.state.selectedProduct}
-                showModal={this.state.showDeleteProductModal}
-                onCancel={this.onCancelDeleteProduct}
-                onSuccess={this.onDeleteProductSuccessfully}
-            />
-        }
-    }
-
-    onAddProducSuccessfully() {
-        this.setState({
-            showEditProductModal: false,
-            showSpinner: true,
-            selectedProduct: null
-        }, this.getProductList);
-    }
-
-    onCancelAddProduct() {
-        this.setState({
-            showEditProductModal: false,
-            selectedProduct: null
-        });
-    }
-
-    onDeleteProductSuccessfully() {
-        this.setState({
-            showDeleteProductModal: false,
-            showSpinner: true,
-            selectedProduct: null
-        }, this.getProductList);
-    }
-
-    onCancelDeleteProduct() {
-        this.setState({
-            showDeleteProductModal: false,
-            selectedProduct: null
-        });
-    }
-
     renderProductList() {
         const self = this;
-        const { products } = this.state;
+        const { products, activePage, limit } = this.state;
         const { isAdmin } = this.props;
         if (this.state.showSpinner) {
             return <SpinnerComponent />
-        } else return <div >
-            <div className='product-list-header-section'>
-                <Label className='header'>My Products!!</Label>
-            </div>
+        } else return <div>
             {
                 isEmpty(products) ? <CustomError errorMessage={'No Products added till now.'} /> :
                     <div className='product-list-table'>
                         {
-                                products.map(function (item, index) {
+                            products.map(function (item, index) {
                                 return <div className='product-item' key={'product-' + index}>
-                                    <Row className='product-item'>
-                                        <Col xs={6} sm={2}>
-                                            <Label className='product-item-title'>{item.name}</Label>
-                                        </Col>
-                                        <Col xs={6} sm={3}>
-                                            <Label className='product-item-title'>{item.description}</Label>
-                                        </Col>
-                                        <Col xs={6} sm={3}>
-                                            <Label className='product-item-title'>{item.price}</Label>
-                                        </Col>
-                                        {
-                                            isAdmin ?  <Col xs={2} sm={2} className='align-center-horizontally'>
-                                            <Label onClick={() => self.editProduct(item)} className='product-item-action'>Edit</Label>
-                                        </Col> : null
-                                        }
-                                        {
-                                            isAdmin ?  <Col xs={2} sm={2} className='align-center-horizontally'>
-                                            <Label onClick={() => self.deleteProduct(item)} className='product-item-action'>Delete</Label>
-                                        </Col> : null
-                                        }
-                                    </Row>
+                                    <ProductItem
+                                        product={item}
+                                        index={((activePage - 1) * limit) + index}
+                                        isAdmin={isAdmin}
+                                        refreshList={self.getProductList}
+                                    />
                                 </div>
                             })
                         }
@@ -141,7 +68,9 @@ export default class ProductList extends Component {
     }
 
     getProductList = async () => {
-        const res = await ApiHelper.getData('/products/getAllProducts');
+        const limit = this.state.limit;
+        const skip = (this.state.activePage - 1) * limit
+        const res = await ApiHelper.getData(`/products/getAllProducts?limit=${limit}&skip=${skip}`);
         if (!isNil(res.data.products)) {
             this.setState({
                 products: res.data.products,
@@ -158,17 +87,25 @@ export default class ProductList extends Component {
         }
     }
 
-    editProduct = async (product) => {
-        this.setState({
-            selectedProduct: product,
-            showEditProductModal: true
-        })
+    renderPagination() {
+        return (
+            <div className={'pagination-container'}>
+                <Pagination
+                    activePage={this.state.activePage}
+                    itemsCountPerPage={5}
+                    totalItemsCount={20}
+                    pageRangeDisplayed={5}
+                    onChange={this.handlePageChange.bind(this)}
+                    itemClass="page-item"
+                    linkClass="page-link"
+                />
+            </div>
+        );
     }
 
-    deleteProduct = async (product) => {
+    handlePageChange(pageNumber) {
         this.setState({
-            selectedProduct: product,
-            showDeleteProductModal: true
-        })
+            activePage: pageNumber
+        }, this.getProductList);
     }
 }

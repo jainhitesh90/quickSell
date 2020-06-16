@@ -8,9 +8,9 @@ exports.saveProduct = async function (product) {
     }
 }
 
-exports.getAllProducts = async function () {
+exports.getAllProducts = async function (limit, skip) {
     try {
-        return await Product.find({})
+        return await Product.find({}).limit(limit).skip(skip)
     } catch (e) {
         throw Error('Error while retrieving product list.')
     }
