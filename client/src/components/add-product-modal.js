@@ -6,6 +6,9 @@ import CustomInput from '../custom-components/custom-input';
 import CustomError from '../custom-components/custom-error';
 import ApiHelper from '../utilities/api-helper';
 import Utility from '../utilities/utility';
+import SpinnerComponent from '../custom-components/custom-spinner';
+import AWS from 'aws-sdk';
+import CustomButton from '../custom-components/custom-button';
 
 export default class AddProductModal extends Component {
     constructor(props) {
@@ -16,6 +19,8 @@ export default class AddProductModal extends Component {
         }
         this.createProduct = this.createProduct.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.onChangeFile = this.onChangeFile.bind(this);
+        this.uploadFileToS3 = this.uploadFileToS3.bind(this);
         this.nameRef = React.createRef();
         this.descriptionRef = React.createRef();
         this.priceRef = React.createRef();
@@ -40,7 +45,7 @@ export default class AddProductModal extends Component {
         return (
             <div style={{ padding: '16px', background: 'lightgrey' }}>
                 <Row>
-                <Col xs={12} sm={6} className={'offset-sm-3 offset-0'}>
+                    <Col xs={12} sm={6} className={'offset-sm-3 offset-0'}>
                         <form noValidate autoComplete="off">
                             <CustomInput
                                 label={"Name"}
@@ -69,6 +74,25 @@ export default class AddProductModal extends Component {
                                 defaultValue={defaultPrice}
                                 errorMessage={errorObject.priceError}
                             />
+                            {
+                                this.state.showSpinner ? <SpinnerComponent color='#664986' /> :
+                                    <CustomButton
+                                        label="Select Product Image"
+                                        primary={false}
+                                        onClick={() => {
+                                            this.productImageRef.reference.current.click()
+                                        }
+                                        }
+                                    />
+                            }
+                            <CustomInput
+                                id="productImage"
+                                ref={(ref) => this.productImageRef = ref}
+                                errorMessage={errorObject.productImageError}
+                                style={{ display: 'none' }}
+                                onChange={this.onChangeFile.bind(this)}
+                                type="file"
+                            />
                             <CustomError errorMessage={errorMessage} />
                         </form>
                     </Col>
@@ -76,6 +100,47 @@ export default class AddProductModal extends Component {
             </div>
         );
     }
+
+    onChangeFile(event) {
+        event.stopPropagation();
+        event.preventDefault();
+        const file = event.target.files[0]
+        this.setState({
+            showSpinner: true
+        }, () => this.uploadFileToS3(file));
+    }
+
+    uploadFileToS3(file) {
+        const self = this;
+        var credentials = {
+            accessKeyId: process.env.REACT_APP_S3_ACCESS_KEY.toString(),
+            secretAccessKey: process.env.REACT_APP_S3_SECRET_KEY.toString()
+        };
+        AWS.config.update(credentials);
+        AWS.config.region = process.env.REACT_APP_S3_REGION.toString();
+        var bucket = new AWS.S3({
+            params: {
+                Bucket: process.env.REACT_APP_S3_BUCKET.toString()
+            }
+        });
+        var params = { Key: file.name, ContentType: file.type, Body: file };
+
+        // Uploading files to the bucket
+        bucket.upload(params, function (err, data) {
+            if (err) {
+                self.setState({
+                    errorMessage: err,
+                    showSpinner: false
+                });
+            } else {
+                console.log(`File uploaded successfully. ${data.Location}`);
+                self.setState({
+                    filePath: data.Location,
+                    showSpinner: false
+                });
+            }
+        });
+    };
 
     handleSubmit() {
         const state = this.state;
@@ -86,6 +151,7 @@ export default class AddProductModal extends Component {
             payload.name = this.nameRef.current['reference'].current.value;
             payload.description = this.descriptionRef.current['reference'].current.value;
             payload.price = this.priceRef.current['reference'].current.value;
+            payload.path = this.state.filePath;
             this.createProduct(payload, (this.props.product || {})._id);
         } else {
             state.errorObject = errorObject;
@@ -98,6 +164,7 @@ export default class AddProductModal extends Component {
         errorObject.nameError = Utility.validateInputFields('name', this.nameRef.current['reference'].current.value);
         errorObject.descriptionError = Utility.validateDataLength('description', this.descriptionRef.current['reference'].current.value);
         errorObject.priceError = Utility.validateInputFields('price', this.priceRef.current['reference'].current.value);
+        errorObject.productImageError = Utility.validateInputFields('image', this.state.filePath);
         return errorObject;
     }
 

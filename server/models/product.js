@@ -10,6 +10,9 @@ let productSchema = new Schema({
     },
     price: {
         type: Number
+    },
+    path: {
+        type: String
     }
 });
 

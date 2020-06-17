@@ -14,7 +14,7 @@ export default class CustomInput extends Component {
   }
 
   render() {
-    const { id, label, type, errorMessage, placeholder, mandatory, prependAddon, autoComplete, defaultValue } = this.props;
+    const { id, label, type, errorMessage, placeholder, mandatory, prependAddon, autoComplete, defaultValue, style, onChange } = this.props;
     let prependAddonClassName = null;
     if (prependAddon) {
       prependAddonClassName = 'fa ' + prependAddon;
@@ -33,7 +33,9 @@ export default class CustomInput extends Component {
             id={id}
             defaultValue={defaultValue}
             type={type || 'text'}
-            placeholder={placeholder} />
+            placeholder={placeholder} 
+            style={style}
+            onChange={onChange}/>
         </InputGroup>
         <CustomError errorMessage={errorMessage} />
       </div>

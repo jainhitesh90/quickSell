@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Row, Col, Card, Label } from 'reactstrap';
-import logo from "../logo.png";
+import placeholder from "../placeholder_product.jpg";
 import AddProductModal from './add-product-modal';
 import DeleteProductModal from './delete-product-modal';
 
@@ -28,7 +28,7 @@ export default class ProductItem extends Component {
         return <Card className='product-item' key={index}>
             <Row>
                 <Col xs={3} sm={3}>
-                    <img className='product-image' src={logo} alt={'logo'}></img>
+                    <img className='product-image' src={product.path || placeholder} alt={'logo'}></img>
                 </Col>
                 <Col xs={9} sm={9}>
                     <Row>
