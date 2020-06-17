@@ -1,4 +1,5 @@
 import { isEmpty, startCase } from 'lodash';
+import AWS from 'aws-sdk';
 
 const validateInputFields = (key, value) => {
     if (isEmpty(value)) {
@@ -21,6 +22,21 @@ function validateDataLength(key, value) {
     }
 }
 
+function getS3Bucket() {
+    var credentials = {
+        accessKeyId: process.env.REACT_APP_S3_ACCESS_KEY.toString(),
+        secretAccessKey: process.env.REACT_APP_S3_SECRET_KEY.toString()
+    };
+    AWS.config.update(credentials);
+    AWS.config.region = process.env.REACT_APP_S3_REGION.toString();
+    var bucket = new AWS.S3({
+        params: {
+            Bucket: process.env.REACT_APP_S3_BUCKET.toString()
+        }
+    });
+    return bucket;
+}
+
 export default {
-    validateInputFields, validateDataLength
+    validateInputFields, validateDataLength, getS3Bucket
 };

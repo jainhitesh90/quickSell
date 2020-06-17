@@ -7,7 +7,6 @@ import CustomError from '../custom-components/custom-error';
 import ApiHelper from '../utilities/api-helper';
 import Utility from '../utilities/utility';
 import SpinnerComponent from '../custom-components/custom-spinner';
-import AWS from 'aws-sdk';
 import CustomButton from '../custom-components/custom-button';
 
 export default class AddProductModal extends Component {
@@ -20,10 +19,19 @@ export default class AddProductModal extends Component {
         this.createProduct = this.createProduct.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.onChangeFile = this.onChangeFile.bind(this);
-        this.uploadFileToS3 = this.uploadFileToS3.bind(this);
+        this.uploadFile = this.uploadFile.bind(this);
         this.nameRef = React.createRef();
         this.descriptionRef = React.createRef();
         this.priceRef = React.createRef();
+    }
+
+    componentWillMount(){
+        const { product } = this.props;
+        if (!isNil(product)) {
+            this.setState({
+                filePath: product.path
+            })
+        }
     }
 
     render() {
@@ -107,25 +115,13 @@ export default class AddProductModal extends Component {
         const file = event.target.files[0]
         this.setState({
             showSpinner: true
-        }, () => this.uploadFileToS3(file));
+        }, () => this.uploadFile(file));
     }
 
-    uploadFileToS3(file) {
+    uploadFile(file) {
         const self = this;
-        var credentials = {
-            accessKeyId: process.env.REACT_APP_S3_ACCESS_KEY.toString(),
-            secretAccessKey: process.env.REACT_APP_S3_SECRET_KEY.toString()
-        };
-        AWS.config.update(credentials);
-        AWS.config.region = process.env.REACT_APP_S3_REGION.toString();
-        var bucket = new AWS.S3({
-            params: {
-                Bucket: process.env.REACT_APP_S3_BUCKET.toString()
-            }
-        });
         var params = { Key: file.name, ContentType: file.type, Body: file };
-
-        // Uploading files to the bucket
+        const bucket = Utility.getS3Bucket();
         bucket.upload(params, function (err, data) {
             if (err) {
                 self.setState({
