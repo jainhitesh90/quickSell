@@ -109,7 +109,7 @@ export default class ProductList extends Component {
                     activePage={activePage}
                     itemsCountPerPage={limit}
                     totalItemsCount={total}
-                    pageRangeDisplayed={limit}
+                    pageRangeDisplayed={5}
                     onChange={this.handlePageChange.bind(this)}
                     itemClass="page-item"
                     linkClass="page-link"

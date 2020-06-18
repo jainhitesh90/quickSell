@@ -147,8 +147,8 @@ label:focus,
   width: 64px;
   height: 64px;
   position: fixed;
-  right: 32px;
-  bottom: 32px;
+  right: 16px;
+  bottom: 16px;
   padding: 10px;
   text-align: center;
   z-index: 100;
@@ -222,14 +222,13 @@ label:focus,
 }
 
 .pagination-container {
-  padding: 48px;
+  padding: 48px 0;
   width: 50%;
   margin: 0 auto;
 }
 
 .pagination-container ul{
-  width: 50%;
-  margin: 0 auto;
+  justify-content: center;
 }
 
 .page-item.active .page-link{

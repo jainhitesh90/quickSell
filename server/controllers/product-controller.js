@@ -1,5 +1,6 @@
 const ProductService = require('../services/product-service');
 var Product = require('../models/product');
+var products = require('../products.json');
 
 exports.addProduct = async function (req, res) {
     try {
@@ -48,6 +49,21 @@ exports.deleteProduct = async function (req, res) {
     try {
         var product = await ProductService.deleteProduct({ _id: req.params.id })
         return res.status(200).json({ status: 200, product: product, message: "Product succesfully deleted" });
+    } catch (e) {
+        return res.status(400).json({ status: 400, errorMessage: e.message });
+    }
+}
+
+//adding products from config file (testing)
+exports.addAllProductsFromConfigFile = async function (req, res) {
+    try {
+        for (let m = 0; m < 500; m++) {
+            products.products.map(function(item) {
+                let product = new Product(item);
+                ProductService.saveProduct(product);
+            });
+        }
+        res.status(200).json({ 'message': 'Your product has been addedd successfully', data: {} });
     } catch (e) {
         return res.status(400).json({ status: 400, errorMessage: e.message });
     }
