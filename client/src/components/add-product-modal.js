@@ -25,7 +25,7 @@ export default class AddProductModal extends Component {
         this.priceRef = React.createRef();
     }
 
-    componentWillMount(){
+    componentWillMount() {
         const { product } = this.props;
         if (!isNil(product)) {
             this.setState({
@@ -83,21 +83,13 @@ export default class AddProductModal extends Component {
                                 errorMessage={errorObject.priceError}
                             />
                             {
-                                this.state.showSpinner ? <SpinnerComponent color='#664986' /> :
-                                    <CustomButton
-                                        label={isNil(this.state.filePath)  ? "Select Product Image" : "Update Product Image"}
-                                        primary={false}
-                                        onClick={() => {
-                                            this.productImageRef.reference.current.click()
-                                        }
-                                        }
-                                    />
+                                this.renderFileSelector()
                             }
                             <CustomInput
                                 id="productImage"
                                 ref={(ref) => this.productImageRef = ref}
                                 errorMessage={errorObject.productImageError}
-                                style={{ display: 'none' }}
+                                hideInput={true}
                                 onChange={this.onChangeFile.bind(this)}
                                 type="file"
                             />
@@ -107,6 +99,21 @@ export default class AddProductModal extends Component {
                 </Row>
             </div>
         );
+    }
+
+    renderFileSelector() {
+        if (this.state.showSpinner) {
+            return <div className='select-product-container'>
+                <SpinnerComponent />
+            </div>
+        } else
+            return <div className='select-product-container'>
+                <span className='select-product-image'
+                    onClick={() => {
+                        this.productImageRef.reference.current.click()
+                    }}>{isNil(this.state.filePath) ? "Select Product Image" : "Update Product Image"}</span>
+                <span className='selected-file-name'>{this.state.fileName}</span>
+            </div>
     }
 
     onChangeFile(event) {
@@ -132,6 +139,7 @@ export default class AddProductModal extends Component {
                 console.log(`File uploaded successfully. ${data.Location}`);
                 self.setState({
                     filePath: data.Location,
+                    fileName: file.name,
                     showSpinner: false
                 });
             }

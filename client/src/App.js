@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import AdminHomePage from "./pages/admin-home-page";
 import UserHomePage from "./pages/user-home-page";
-import ErrorComponent from './components/error-component';
+import InvalidRoute from './pages/invalid-route';
 
 class App extends Component {
   render() {
@@ -13,7 +13,7 @@ class App extends Component {
           <Switch>
             <Route path="/admin/" exact component={AdminHomePage} />
             <Route path="/" exact component={UserHomePage} />
-            <Route component={ErrorComponent} />
+            <Route component={InvalidRoute} />
           </Switch>
         </div>
       </Router>

@@ -1,4 +1,9 @@
 .root-container {
-    background-color: #534292;
-    min-height: 100vh;
+    background-color:#F8F8F8;
 }
+
+/* @media only screen and (max-width: 600px) {
+    .root-container {
+        background-color:#F8F8F8;
+    }
+} */

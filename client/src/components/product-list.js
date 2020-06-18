@@ -12,7 +12,7 @@ export default class ProductList extends Component {
         this.state = {
             products: [],
             showSpinner: true,
-            limit: 5,
+            limit: 10,
             activePage: 1
         }
         this.getProductList = this.getProductList.bind(this);
@@ -29,11 +29,16 @@ export default class ProductList extends Component {
     render() {
         return (
             <div>
-                <div className='product-list-container'>
-                    <CustomError errorMessage={this.state.error} />
-                    {this.renderProductList()}
+                <div className='product-list-header'>
+                    <p className='header'>Product List</p>
                 </div>
-                {this.renderPagination()}
+                <CustomError errorMessage={this.state.error} />
+                {
+                    this.state.showSpinner ? <SpinnerComponent style={{padding: '96px', background: 'white'}}/> : <div>
+                        {this.renderProductList()}
+                        {this.renderPagination()}
+                    </div>
+                }
             </div>
         )
     }
@@ -42,12 +47,10 @@ export default class ProductList extends Component {
         const self = this;
         const { products, activePage, limit } = this.state;
         const { isAdmin } = this.props;
-        if (this.state.showSpinner) {
-            return <SpinnerComponent />
-        } else return <div>
+        return <div className='product-list'>
             {
                 isEmpty(products) ? <CustomError errorMessage={'No Products added till now.'} /> :
-                    <div className='product-list-table'>
+                    <div>
                         {
                             products.map(function (item, index) {
                                 return <div className='product-item' key={'product-' + index}>
@@ -77,7 +80,7 @@ export default class ProductList extends Component {
                 error: null,
                 showSpinner: false,
                 message: res.data.message
-            })
+            }, () => window.scrollTo({ top: 0, behavior: 'smooth' }))
         } else {
             this.setState({
                 products: [],
@@ -89,7 +92,7 @@ export default class ProductList extends Component {
     }
 
     renderPagination() {
-        const {limit, activePage, total} = this.state;
+        const { limit, activePage, total } = this.state;
         return (
             <div className={'pagination-container'}>
                 <Pagination

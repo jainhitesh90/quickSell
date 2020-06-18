@@ -14,13 +14,19 @@ export default class CustomInput extends Component {
   }
 
   render() {
-    const { id, label, type, errorMessage, placeholder, mandatory, prependAddon, autoComplete, defaultValue, style, onChange } = this.props;
+    const { id, label, type, errorMessage, placeholder, mandatory, prependAddon, autoComplete, defaultValue, hideInput, onChange } = this.props;
     let prependAddonClassName = null;
     if (prependAddon) {
       prependAddonClassName = 'fa ' + prependAddon;
     }
+    const style = {
+      marginTop: '10px'
+    }
+    if (hideInput) {
+      style.display = 'none'
+    }
     return (
-      <div style={{ marginTop: '10px' }}>
+      <div style={style}>
         <Label className='input-label'>{label} {mandatory ? <sup style={{ color: 'red' }}>*</sup> : null}</Label>
         <InputGroup style={inputStyle}>
           {
@@ -34,7 +40,6 @@ export default class CustomInput extends Component {
             defaultValue={defaultValue}
             type={type || 'text'}
             placeholder={placeholder} 
-            style={style}
             onChange={onChange}/>
         </InputGroup>
         <CustomError errorMessage={errorMessage} />

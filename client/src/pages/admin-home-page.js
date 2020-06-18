@@ -30,12 +30,26 @@ export default class AdminHomePage extends Component {
         }
     }
 
+    // renderAddProductButton() {
+    //     return <CustomButton
+    //         label={"Add New Product"}
+    //         id={"addProduct"}
+    //         className={'add-product'}
+    //         onClick={() => this.setState({ showModal: true })}
+    //         color={"primary"}
+    //     />
+    // }
+
     renderAddProductButton() {
-        return <CustomButton
-            label={"Add New Product"}
-            id={"addProduct"}
-            onClick={() => this.setState({ showModal: true })}
-            color={"primary"}
-        />
+        return <div className={'add-product'}
+        onClick={() => this.setState({ showModal: true })}>
+            +
+        </div>
+        //     label={"Add New Product"}
+        //     id={"addProduct"}
+            
+            
+        //     color={"primary"}
+        // />
     }
 }

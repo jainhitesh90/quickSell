@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col, Card, Label } from 'reactstrap';
+import { Row, Col, Card } from 'reactstrap';
 import placeholder from "../placeholder_product.jpg";
 import AddProductModal from './add-product-modal';
 import DeleteProductModal from './delete-product-modal';
@@ -27,26 +27,34 @@ export default class ProductItem extends Component {
         const { index, product, isAdmin } = this.props;
         return <Card className='product-item' key={index}>
             <Row>
-                <Col xs={3} sm={3}>
+                <Col xs={3} sm={2}>
                     <img className='product-image' src={product.path || placeholder} alt={'logo'}></img>
                 </Col>
-                <Col xs={9} sm={9}>
-                    <Row>
-                        <Col xs={10} sm={10}>
-                            <p>{product.name}</p>
-                            <p>Rs {product.price}</p>
-                            <p>{product.description}</p>
-                        </Col>
-                        <Col xs={2} sm={2}>
-                            <Label>{index + 1}</Label>
-                        </Col>
-                    </Row>
-
+                <Col xs={9} sm={10}>
+                    <div className='product-details'>
+                        <div>
+                            <p className='product-name'>{product.name}</p>
+                            <p className='product-price'>Rs {product.price}</p>
+                            <p className='product-description'>{product.description}</p>
+                        </div>
+                        <div>
+                         {this.renderActionButtons(index)}
+                        </div>
+                    </div>
                 </Col>
             </Row>
-            {isAdmin ? <Label onClick={() => this.setState({ showEditProductModal: true })}>Edit</Label> : null}
-            {isAdmin ? <Label onClick={() => this.setState({ showDeleteProductModal: true })}>Delete</Label> : null}
         </Card>
+    }
+
+    renderActionButtons(index) {
+        if (this.props.isAdmin) {
+            return <div>
+                  <p className="fa fa-edit product-action" onClick={() => this.setState({ showEditProductModal: true })}></p>
+                  <p className="fa fa-trash product-action" onClick={() => this.setState({ showDeleteProductModal: true })}></p>
+            </div>
+        } else {
+            return <p className='product-count'>{index + 1}</p>
+        }
     }
 
     renderEditProductModal() {

@@ -21,7 +21,7 @@ exports.getProduct = async function (req, res) {
 }
 
 exports.getAllProducts = async function (req, res) {
-    const limit = parseInt(req.query.limit) || 10;
+    const limit = parseInt(req.query.limit);
     const skip = parseInt(req.query.skip) || 0
     try {
         var result = await ProductService.getAllProducts(limit, skip)
