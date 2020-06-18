@@ -12,19 +12,19 @@ export default class ProductList extends Component {
         super(props)
         this.state = {
             products: [],
-            showSpinner: true,
             limit: 10,
             activePage: 1
         }
         this.getProductList = this.getProductList.bind(this);
+        this.refreshList = this.refreshList.bind(this);
     }
 
     componentWillMount() {
-        this.getProductList();
+        this.refreshList();
     }
 
     componentWillReceiveProps() {
-        this.getProductList();
+        this.refreshList();
     }
 
     render() {
@@ -65,7 +65,7 @@ export default class ProductList extends Component {
                                         product={item}
                                         index={((activePage - 1) * limit) + index}
                                         isAdmin={isAdmin}
-                                        refreshList={self.getProductList}
+                                        refreshList={self.refreshList}
                                     />
                                 </div>
                             })
@@ -73,7 +73,12 @@ export default class ProductList extends Component {
                     </div>
             }
         </div>
+    }
 
+    refreshList() {
+        this.setState({
+            showSpinner: true
+        }, this.getProductList)
     }
 
     getProductList = async () => {
@@ -121,6 +126,6 @@ export default class ProductList extends Component {
     handlePageChange(pageNumber) {
         this.setState({
             activePage: pageNumber
-        }, this.getProductList);
+        }, this.refreshList);
     }
 }

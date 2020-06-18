@@ -146,6 +146,7 @@ export default class AddProductModal extends Component {
     };
 
     handleSubmit() {
+        const self = this;
         const state = this.state;
         const errorObject = this.validateInputs();
         let error = !Object.values(errorObject).every(o => o === null);
@@ -155,7 +156,9 @@ export default class AddProductModal extends Component {
             payload.description = this.descriptionRef.current['reference'].current.value;
             payload.price = this.priceRef.current['reference'].current.value;
             payload.path = this.state.filePath;
-            this.createProduct(payload, (this.props.product || {})._id);
+            this.setState({
+                showSpinner: true
+            }, () => self.createProduct(payload, (self.props.product || {})._id))
         } else {
             state.errorObject = errorObject;
             this.setState(state);
