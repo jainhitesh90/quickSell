@@ -85,7 +85,7 @@ export default class AddProductModal extends Component {
                             {
                                 this.state.showSpinner ? <SpinnerComponent color='#664986' /> :
                                     <CustomButton
-                                        label="Select Product Image"
+                                        label={isNil(this.state.filePath)  ? "Select Product Image" : "Update Product Image"}
                                         primary={false}
                                         onClick={() => {
                                             this.productImageRef.reference.current.click()
