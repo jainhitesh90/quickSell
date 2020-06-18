@@ -4,10 +4,9 @@ import { Row, Col } from 'reactstrap';
 import CustomModal from '../custom-components/custom-modal';
 import CustomInput from '../custom-components/custom-input';
 import CustomError from '../custom-components/custom-error';
+import SpinnerComponent from '../custom-components/custom-spinner';
 import ApiHelper from '../utilities/api-helper';
 import Utility from '../utilities/utility';
-import SpinnerComponent from '../custom-components/custom-spinner';
-import CustomButton from '../custom-components/custom-button';
 
 export default class AddProductModal extends Component {
     constructor(props) {
@@ -60,7 +59,7 @@ export default class AddProductModal extends Component {
                                 id={"name"}
                                 ref={this.nameRef}
                                 mandatory={true}
-                                prependAddon='fa-info'
+                                prependAddon='fa-wpforms'
                                 defaultValue={defaultName}
                                 errorMessage={errorObject.nameError}
                             />
@@ -78,7 +77,7 @@ export default class AddProductModal extends Component {
                                 id={"price"}
                                 ref={this.priceRef}
                                 mandatory={true}
-                                prependAddon='fa-info'
+                                prependAddon='fa-inr'
                                 defaultValue={defaultPrice}
                                 errorMessage={errorObject.priceError}
                             />

@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { isNil, isEmpty } from 'lodash';
+import Pagination from "react-js-pagination";
 import SpinnerComponent from '../custom-components/custom-spinner';
-import ApiHelper from '../utilities/api-helper';
 import CustomError from '../custom-components/custom-error';
 import ProductItem from '../components/product-item';
-import Pagination from "react-js-pagination";
+import ApiHelper from '../utilities/api-helper';
+import emptyListIcon from '../resources/empty-list.png'
 
 export default class ProductList extends Component {
     constructor(props) {
@@ -43,13 +44,19 @@ export default class ProductList extends Component {
         )
     }
 
+    renderEmptyListSection() {
+        return <div>
+            <img className='invalid-route-image' src={emptyListIcon} alt={'empty-list'}></img>
+        </div>
+    }
+
     renderProductList() {
         const self = this;
         const { products, activePage, limit } = this.state;
         const { isAdmin } = this.props;
         return <div className='product-list'>
             {
-                isEmpty(products) ? <CustomError errorMessage={'No Products added till now.'} /> :
+                isEmpty(products) ? this.renderEmptyListSection() :
                     <div>
                         {
                             products.map(function (item, index) {
@@ -93,6 +100,9 @@ export default class ProductList extends Component {
 
     renderPagination() {
         const { limit, activePage, total } = this.state;
+        if (isEmpty(this.state.products)) {
+            return null;
+        }
         return (
             <div className={'pagination-container'}>
                 <Pagination

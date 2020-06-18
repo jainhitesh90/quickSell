@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import CustomButton from '../custom-components/custom-button';
 import AddProductModal from '../components/add-product-modal';
 import ProductList from '../components/product-list';
 
@@ -30,26 +29,7 @@ export default class AdminHomePage extends Component {
         }
     }
 
-    // renderAddProductButton() {
-    //     return <CustomButton
-    //         label={"Add New Product"}
-    //         id={"addProduct"}
-    //         className={'add-product'}
-    //         onClick={() => this.setState({ showModal: true })}
-    //         color={"primary"}
-    //     />
-    // }
-
     renderAddProductButton() {
-        return <div className={'add-product'}
-        onClick={() => this.setState({ showModal: true })}>
-            +
-        </div>
-        //     label={"Add New Product"}
-        //     id={"addProduct"}
-            
-            
-        //     color={"primary"}
-        // />
+        return <div className={'add-product'} onClick={() => this.setState({ showModal: true })}> + </div>
     }
 }

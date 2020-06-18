@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Label } from 'reactstrap';
-import invalidRouteImage from "../invalid_route.jpg";
+import invalidRouteImage from "../resources/invalid_route.jpg";
 
 export default class InvalidRoute extends Component {
     render() {

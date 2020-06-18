@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Row, Col, Card } from 'reactstrap';
-import placeholder from "../placeholder_product.jpg";
+import placeholder from "../resources/placeholder_product.jpg";
 import AddProductModal from './add-product-modal';
 import DeleteProductModal from './delete-product-modal';
 
@@ -24,7 +24,7 @@ export default class ProductItem extends Component {
     }
 
     renderSingleProduct() {
-        const { index, product, isAdmin } = this.props;
+        const { index, product } = this.props;
         return <Card className='product-item' key={index}>
             <Row>
                 <Col xs={3} sm={2}>
