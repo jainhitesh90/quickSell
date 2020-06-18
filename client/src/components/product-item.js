@@ -34,7 +34,7 @@ export default class ProductItem extends Component {
                     <div className='product-details'>
                         <div>
                             <p className='product-name'>{product.name}</p>
-                            <p className='product-price'>Rs {product.price}</p>
+                            <p className='product-price'>Rs. {product.price.toLocaleString()}</p>
                             <p className='product-description'>{product.description}</p>
                         </div>
                         <div>

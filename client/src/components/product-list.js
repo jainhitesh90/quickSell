@@ -29,7 +29,7 @@ export default class ProductList extends Component {
 
     render() {
         return (
-            <div>
+            <div className='product-list-container'>
                 <div className='product-list-header'>
                     <p className='header'>Product List</p>
                 </div>

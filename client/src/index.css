@@ -130,6 +130,11 @@ label:focus,
   font-size: 20px;
 }
 
+.product-list-container{
+  background-color:#F8F8F8;
+  height: 100vh;
+}
+
 .product-list {
   padding-top: 68px;
 }
@@ -177,12 +182,16 @@ label:focus,
   color: black;
   font-size: 20px;
   font-weight: 600;
+  line-height: 1;
+  margin-bottom: 15px !important;
 }
 
 .product-price {
   color: #8C8C8C;
   font-size: 16px;
   font-weight: 600;
+  line-height: 1;
+  margin-bottom: 15px !important;
 }
 
 .product-description {
