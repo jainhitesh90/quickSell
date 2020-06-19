@@ -49,16 +49,18 @@ export default class ProductList extends Component {
         return <div className='product-list'>
             {
                 (isEmpty(products) && loading === false) ? this.renderEmptyListSection() :
+                products.length === 0 ? this.renderSpinner() :
                     <InfiniteScroll
                         dataLength={products.length}
                         next={this.refreshList}
                         hasMore={products.length < total }
-                        loader={<SpinnerComponent style={{ padding: '24px', background: 'white' }} />}
+                        loader={this.renderSpinner()}
                         endMessage={
                             <p className='reached-end-of-list'>
                                 Yay! You have seen it all
                             </p>
-                        }>
+                        }
+                        >
                         {
                             <div>
                                 {
@@ -78,6 +80,10 @@ export default class ProductList extends Component {
                     </InfiniteScroll>
             }
         </div>
+    }
+
+    renderSpinner() {
+        return <SpinnerComponent style={{ padding: '24px'}} />
     }
 
     refreshList() {
