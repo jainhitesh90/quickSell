@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { isNil, isEmpty } from 'lodash';
-import Pagination from "react-js-pagination";
 import SpinnerComponent from '../custom-components/custom-spinner';
 import CustomError from '../custom-components/custom-error';
 import ProductItem from '../components/product-item';
 import ApiHelper from '../utilities/api-helper';
-import emptyListIcon from '../resources/empty-list.png'
+import emptyListIcon from '../resources/empty-list.png';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 export default class ProductList extends Component {
     constructor(props) {
@@ -13,119 +13,103 @@ export default class ProductList extends Component {
         this.state = {
             products: [],
             limit: 10,
-            activePage: 1
+            activePage: 1,
+            loading: true,
         }
         this.getProductList = this.getProductList.bind(this);
         this.refreshList = this.refreshList.bind(this);
     }
 
     componentWillMount() {
-        this.refreshList();
+        this.getProductList();
     }
 
     componentWillReceiveProps() {
-        this.refreshList();
+        this.getProductList();
     }
 
     render() {
         return (
             <div className='product-list-container'>
-                <div className='product-list-header'>
-                    <p className='header'>Product List</p>
-                </div>
+                <div className='product-list-header'>Product List</div>
                 <CustomError errorMessage={this.state.error} />
-                {
-                    this.state.showSpinner ? <SpinnerComponent style={{padding: '96px', background: 'white'}}/> : <div>
-                        {this.renderProductList()}
-                        {this.renderPagination()}
-                    </div>
-                }
+                { this.renderProductList() }
             </div>
         )
     }
 
     renderEmptyListSection() {
-        return <div>
-            <img className='invalid-route-image' src={emptyListIcon} alt={'empty-list'}></img>
-        </div>
+        return <img className='invalid-route-image' src={emptyListIcon} alt={'empty-list'}></img>
     }
 
     renderProductList() {
         const self = this;
-        const { products, activePage, limit } = this.state;
+        const { products, total, loading } = this.state;
         const { isAdmin } = this.props;
         return <div className='product-list'>
             {
-                isEmpty(products) ? this.renderEmptyListSection() :
-                    <div>
+                (isEmpty(products) && loading === false) ? this.renderEmptyListSection() :
+                    <InfiniteScroll
+                        dataLength={products.length}
+                        next={this.refreshList}
+                        hasMore={products.length < total }
+                        loader={<SpinnerComponent style={{ padding: '24px', background: 'white' }} />}
+                        endMessage={
+                            <p className='reached-end-of-list'>
+                                Yay! You have seen it all
+                            </p>
+                        }>
                         {
-                            products.map(function (item, index) {
-                                return <div className='product-item' key={'product-' + index}>
-                                    <ProductItem
-                                        product={item}
-                                        index={((activePage - 1) * limit) + index}
-                                        isAdmin={isAdmin}
-                                        refreshList={self.refreshList}
-                                    />
-                                </div>
-                            })
+                            <div>
+                                {
+                                    products.map(function (item, index) {
+                                        return <div className='product-item' key={'product-' + index}>
+                                            <ProductItem
+                                                product={item}
+                                                index={index}
+                                                isAdmin={isAdmin}
+                                                refreshList={self.getProductList}
+                                            />
+                                        </div>
+                                    })
+                                }
+                            </div>
                         }
-                    </div>
+                    </InfiniteScroll>
             }
         </div>
     }
 
     refreshList() {
         this.setState({
-            showSpinner: true
-        }, this.getProductList)
+            loading: true,
+            activePage: this.state.activePage + 1
+        }, () => this.getProductList(true))
     }
 
-    getProductList = async () => {
-        const limit = this.state.limit;
-        const skip = (this.state.activePage - 1) * limit
+    getProductList = async (updateProducts) => {
+        let {products, limit, activePage} = this.state;
+        const skip = (activePage - 1) * limit
         const res = await ApiHelper.getData(`/products/getAllProducts?limit=${limit}&skip=${skip}`);
         if (!isNil(res.data.products)) {
+            if (updateProducts) {
+                products = products.concat(res.data.products);
+            } else {
+                products = res.data.products;
+            }
             this.setState({
-                products: res.data.products,
+                products: products,
                 total: res.data.total,
                 error: null,
-                showSpinner: false,
-                message: res.data.message
-            }, () => window.scrollTo({ top: 0, behavior: 'smooth' }))
+                loading: false,
+                message: res.data.message,
+            })
         } else {
             this.setState({
-                products: [],
                 total: 0,
                 message: res.data.error,
-                showSpinner: false
+                loading: false
             })
         }
-    }
-
-    renderPagination() {
-        const { limit, activePage, total } = this.state;
-        if (isEmpty(this.state.products)) {
-            return null;
-        }
-        return (
-            <div className={'pagination-container'}>
-                <Pagination
-                    activePage={activePage}
-                    itemsCountPerPage={limit}
-                    totalItemsCount={total}
-                    pageRangeDisplayed={5}
-                    onChange={this.handlePageChange.bind(this)}
-                    itemClass="page-item"
-                    linkClass="page-link"
-                />
-            </div>
-        );
-    }
-
-    handlePageChange(pageNumber) {
-        this.setState({
-            activePage: pageNumber
-        }, this.refreshList);
     }
 }

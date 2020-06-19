@@ -122,9 +122,6 @@ label:focus,
   position: fixed;
   width: 100%;
   z-index: 100;
-}
-
-.header {
   color: white;
   font-weight: 600;
   font-size: 20px;
@@ -184,6 +181,7 @@ label:focus,
   font-weight: 600;
   line-height: 1;
   margin-bottom: 15px !important;
+  padding-right: 15px;
 }
 
 .product-price {
@@ -239,6 +237,14 @@ label:focus,
 
 .page-link {
   color: #2C31A3 !important;
+}
+
+.reached-end-of-list {
+  color: #2C31A3;
+  font-size: 20px;
+  padding: 16px;
+  text-align: center;
+  font-weight: 600;
 }
 
 @media only screen and (max-width: 600px) {
